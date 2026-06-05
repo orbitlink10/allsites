@@ -1592,6 +1592,9 @@ public function payNow($total){
         // Remove editor/AI-specific attributes leaking into public pages.
         $content = $safeReplace('/\sdata-(?:turn-id|message-id|is-last-node|start|end|testid|sourcepos|message-author-role)\s*=\s*(".*?"|\'.*?\'|[^\s>]+)/i', '', $content);
         $content = $safeReplace('/\s(?:id|class)\s*=\s*(".*?(?:conversation-turn|text-token-text-primary|whitespace-pre-wrap|markdown|prose).*?"|\'.*?(?:conversation-turn|text-token-text-primary|whitespace-pre-wrap|markdown|prose).*?\')/i', '', $content);
+        // TinyMCE can persist pasted images as massive base64 data URIs, which delays page rendering.
+        $content = $safeReplace('/<img\b[^>]*\bsrc\s*=\s*(["\'])data:image\/[^"\']+\1[^>]*>/i', '', $content);
+        $content = $safeReplace('/<img\b[^>]*\bsrc\s*=\s*data:image\/[^\s>]+[^>]*>/i', '', $content);
 
         // Prevent multiple H1s in body content.
         $content = $safeReplace('/<h1([^>]*)>/i', '<h2$1>', $content);

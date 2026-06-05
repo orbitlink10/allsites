@@ -20,43 +20,44 @@ class AddAltToImages
                     $response->setContent($html);
                 }
                 if (stripos($html, '<img') !== false) {
-                    libxml_use_internal_errors(true);
-                    $dom = new \DOMDocument('1.0', 'UTF-8');
-                    $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
-
-                    $title = '';
-                    $titleNodes = $dom->getElementsByTagName('title');
-                    if ($titleNodes->length > 0) {
-                        $title = trim($titleNodes->item(0)->textContent);
-                    }
+                    $title = $this->extractTitle($html);
                     if ($title === '') {
                         $title = ucfirst(trim($request->path(), '/')) ?: config('app.name', 'Gamun');
                     }
 
-                    $imgs = $dom->getElementsByTagName('img');
-                    foreach ($imgs as $img) {
-                        $alt = $img->getAttribute('alt');
-                        if ($alt === null || trim($alt) === '') {
-                            $src = $img->getAttribute('src');
-                            $fallback = $title;
-                            if ($src) {
-                                $basename = pathinfo(parse_url($src, PHP_URL_PATH) ?? '', PATHINFO_FILENAME);
-                                if ($basename) {
-                                    $fallback = str_replace(['-', '_'], ' ', $basename);
-                                }
-                            }
-                            $img->setAttribute('alt', $fallback);
+                    $html = preg_replace_callback('/<img\b[^>]*>/i', function ($matches) use ($title) {
+                        $tag = $matches[0];
+                        if (preg_match('/\salt\s*=/i', $tag)) {
+                            return $tag;
                         }
-                    }
 
-                    $newHtml = $dom->saveHTML();
-                    $response->setContent($newHtml);
-                    libxml_clear_errors();
+                        $fallback = $title;
+                        if (preg_match('/\ssrc\s*=\s*(["\'])(.*?)\1/i', $tag, $srcMatch) || preg_match('/\ssrc\s*=\s*([^\s>]+)/i', $tag, $srcMatch)) {
+                            $src = $srcMatch[2] ?? $srcMatch[1] ?? '';
+                            $basename = pathinfo(parse_url($src, PHP_URL_PATH) ?? '', PATHINFO_FILENAME);
+                            if ($basename) {
+                                $fallback = str_replace(['-', '_'], ' ', $basename);
+                            }
+                        }
+
+                        return preg_replace('/\s*\/?>$/', ' alt="' . e($fallback) . '">', $tag) ?? $tag;
+                    }, $html) ?? $html;
+
+                    $response->setContent($html);
                 }
             }
         }
 
         return $response;
+    }
+
+    private function extractTitle(string $html): string
+    {
+        if (preg_match('/<title\b[^>]*>(.*?)<\/title>/is', $html, $matches)) {
+            return trim(html_entity_decode(strip_tags($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        }
+
+        return '';
     }
 
     private function stripByteOrderMarkers(string $html): string
