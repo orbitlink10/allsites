@@ -16,6 +16,7 @@ class AddAltToImages
             if ($contentType && str_contains($contentType, 'text/html')) {
                 $originalHtml = $response->getContent();
                 $html = $this->stripByteOrderMarkers($originalHtml);
+                $html = $this->removeStarliteHeroBadge($html);
                 if ($html !== $originalHtml) {
                     $response->setContent($html);
                 }
@@ -58,6 +59,15 @@ class AddAltToImages
         }
 
         return '';
+    }
+
+    private function removeStarliteHeroBadge(string $html): string
+    {
+        return preg_replace(
+            '/<span\b[^>]*>\s*Welcome to Starlite Internet Kenya\s*<\/span>/i',
+            '',
+            $html
+        ) ?? $html;
     }
 
     private function stripByteOrderMarkers(string $html): string
