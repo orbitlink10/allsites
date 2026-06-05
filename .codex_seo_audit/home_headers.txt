@@ -1,0 +1,14 @@
+HTTP/1.1 200 OK
+Connection: Keep-Alive
+Keep-Alive: timeout=5, max=100
+Content-Type: text/html; charset=UTF-8
+Cache-Control: no-cache, private
+set-cookie: laravel_session=eyJpdiI6IlN1VzdXdmFWSE9LZGdJYjFLVkVJZEE9PSIsInZhbHVlIjoiWUNSeUhKdUFvY1F3WVJQOTFaVEdlN042UHBsWldnQXBER240WmRKRTJBRHFKRG9NVldzVUNUQ3BCb2RkZjJnclgzSnA5YnhQZ0QwdkJwQjVXSis2c1RNbERRUlZWWjY5UWpqdldwOENiTUo5VHFoVjlic2QwU2hVNE9ZOVhpMG0iLCJtYWMiOiI2ZGZiMDZlYTUwZjZmODQ3ODhlMjI2ZTdlNGRmYTY0ODhkM2M1MDMwOTg4Mjk0NGJhNTUyZjczYjc2ZGE1MGIzIiwidGFnIjoiIn0%3D; expires=Thu, 19 Feb 2026 08:59:00 GMT; Max-Age=7200; path=/; httponly; samesite=lax; secure
+Transfer-Encoding: chunked
+Date: Thu, 19 Feb 2026 06:59:00 GMT
+Server: LiteSpeed
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+alt-svc: h3=":443"; ma=2592000, h3-29=":443"; ma=2592000, h3-Q050=":443"; ma=2592000, h3-Q046=":443"; ma=2592000, h3-Q043=":443"; ma=2592000, quic=":443"; ma=2592000; v="43,46"
+

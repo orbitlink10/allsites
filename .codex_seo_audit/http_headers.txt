@@ -1,0 +1,12 @@
+HTTP/1.1 301 Moved Permanently
+Connection: Keep-Alive
+Keep-Alive: timeout=5, max=100
+Content-Type: text/html
+Content-Length: 795
+Date: Thu, 19 Feb 2026 06:59:32 GMT
+Server: LiteSpeed
+Location: https://starliteinternetkenya.co.ke/
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+
