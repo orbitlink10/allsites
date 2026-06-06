@@ -17,6 +17,7 @@ class AddAltToImages
                 $originalHtml = $response->getContent();
                 $html = $this->stripByteOrderMarkers($originalHtml);
                 $html = $this->removeStarliteHeroBadge($html);
+                $html = $this->removeDuplicateHeroKenya($html);
                 if ($html !== $originalHtml) {
                     $response->setContent($html);
                 }
@@ -66,6 +67,15 @@ class AddAltToImages
         return preg_replace(
             '/<span\b[^>]*>\s*Welcome to Starlite Internet Kenya\s*<\/span>/i',
             '',
+            $html
+        ) ?? $html;
+    }
+
+    private function removeDuplicateHeroKenya(string $html): string
+    {
+        return preg_replace(
+            '/(\bKenya)\s*<span\b[^>]*class=(["\'])(?=[^"\']*\btext-gradient\b)[^"\']*\2[^>]*>\s*Kenya\s*<\/span>/i',
+            '$1',
             $html
         ) ?? $html;
     }
